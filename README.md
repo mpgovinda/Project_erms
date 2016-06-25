@@ -1,5 +1,7 @@
 # Project_erms
-I created some login and deo stuff... login connect with django ,deo isn't..
-So tell me you guys ok with that or not, what' should I do or not...
-I think I need proper giud from u...
-thanks!
+Project ERMS helps to manage the entire Interview process in the company.
+System difined only for internal process of company not involving outsiders.
+It does manage Interviews including creating vacancies, manageing cvs, managing
+interviwers,... etc. 
+  This repository for team Treset members to show their progress and carry on the
+project work successfully.
