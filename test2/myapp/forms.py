@@ -1,5 +1,5 @@
 from django import forms
-from datetime import date,time
+from django.contrib.admin import widgets
 from .models import *
 
 
@@ -7,7 +7,7 @@ class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
         fields = ['NIC', 'FName', 'LName', 'FullName', 'Email', 'DOB',
-                  'AddressLine1', 'ContactNum', 'PImage',
+                  'AddressLine1', 'ContactNum',
                   'Post', 'FacebookProf',
                   'LinkedInProf', 'Department', 'Objective', 'SpecialNotes']
 
@@ -15,8 +15,15 @@ class PersonForm(forms.ModelForm):
 class InterviewForm(forms.ModelForm):
     class Meta:
         model = Interview
-        fields = ['Time', 'Date', 'Venue', 'HOD', 'Interviewers', 'Vacancy', 'Department', 'InterviewType']
-        exclude = ['NoOfPasses', 'NoOfFails', 'NoOfOnHolds','Interviewer_Review', 'HOD_Review', 'HR_Review']
+        fields = ['Time', 'Date', 'Venue', 'HOD', 'Vacancy', 'Department', 'InterviewType']
+        exclude = ['NoOfPasses', 'NoOfFails', 'NoOfOnHolds', 'Interviewer_Review', 'HOD_Review', 'HR_Review']
+
+
+class InterviewForm2(forms.ModelForm):
+    class Meta:
+        model = Interview
+        fields = ['Interviewers']
+        exclude = ['Time', 'Date', 'Venue', 'HOD', 'Vacancy', 'Department', 'InterviewType','NoOfPasses', 'NoOfFails', 'NoOfOnHolds', 'Interviewer_Review', 'HOD_Review', 'HR_Review']
 
 
 class ExperienceForm(forms.ModelForm):
@@ -31,6 +38,7 @@ class QualificationForm(forms.ModelForm):
         model = Qualifications
         fields = ['QName', 'subject']
 
+
 class SubQualificationForm(forms.ModelForm):
     class Meta:
         model = SubQualification
@@ -42,6 +50,17 @@ class SpecializedAreaForm(forms.ModelForm):
     class Meta:
         model = SpecializedArea
         fields = ['SpecializedArea']
+
+
+class VacancyForm(forms.ModelForm):
+    # def __init__(self, *args, **kwargs):
+    #     super(VacancyForm, self).__init__(*args, **kwargs)
+    #     self.fields['DateOfPublish'].widget = widgets.AdminDateWidget()
+    #     self.fields['ClosingDate'].widget = widgets.AdminTimeWidget()
+
+    class Meta:
+        model = Vacancy
+        fields = ['Post', 'DeptID', 'NoOfPossitions', 'NoOfIntDone', 'DateOfPublish', 'ClosingDate']
 
 
 class HodReviewForm(forms.ModelForm):

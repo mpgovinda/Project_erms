@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 
@@ -14,7 +15,7 @@ def User_directory_path(instance, filename):
 
 
 class Person(models.Model):
-    NIC = models.CharField(unique=True,max_length=12)
+    NIC = models.CharField(unique=True, max_length=12)
     FName = models.CharField(max_length=30)
     LName = models.CharField(max_length=30)
     FullName = models.CharField(max_length=100)
@@ -34,8 +35,8 @@ class Person(models.Model):
     SpecialNotes = models.TextField(blank=True,null=True)
     Department = models.ManyToManyField("Department")
     Post = models.ManyToManyField("Post")
-    Degree = models.ManyToManyField("Degree", through="Person_Degree",null=True)
-    Interview = models.ManyToManyField("Interview", through='Person_Interview',null=True)
+    Degree = models.ManyToManyField("Degree", through="Person_Degree", null=True)
+    Interview = models.ManyToManyField("Interview", through='Person_Interview', null=True)
 
     def __str__(self):
         return self.FName,self.LName,self.FullName,self.Nationality
@@ -129,6 +130,7 @@ class DegreeField(models.Model):
 class DegreeType(models.Model):
     Type = models.CharField(max_length=10)
     HierachyNumber = models.IntegerField()
+
     def __str__(self):
         return self.Type
 
@@ -193,8 +195,8 @@ class Interview(models.Model):
     Department = models.ForeignKey(Department, on_delete=models.CASCADE)
     InterviewType = models.ForeignKey(InterviewType, on_delete=models.CASCADE)
     Interviewer_Review = models.TextField(blank=True,null=True)
-    HOD_Review = models.TextField(blank=True,null=True)
-    HR_Review = models.TextField(blank=True,null=True)
+    HOD_Review = models.TextField(blank=True, null=True)
+    HR_Review = models.TextField(blank=True, null=True)
     NoOfPasses = models.PositiveIntegerField()
     NoOfFails = models.PositiveIntegerField()
     NoOfOnHolds = models.PositiveIntegerField()
@@ -214,7 +216,9 @@ class Vacancy(models.Model):
     NoOfPossitions = models.IntegerField()
     Post = models.ForeignKey(Post, on_delete=models.CASCADE)
     DeptID = models.ForeignKey(Department, on_delete=models.CASCADE)
-    Post_Dept = models.ForeignKey(Post_Dept, on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return u'{}'.format(self.Post, self.DateOfPublish)
 
 
 class Experience(models.Model):
@@ -237,18 +241,6 @@ class SubQualification(models.Model):
 
     def __str__(self):
         return self.Subject, self.SubResult
-
-
-class Experience_For_Post(models.Model):
-    ExPost = models.CharField(max_length=100)
-    Post = models.ForeignKey(Post)
-    Field = models.CharField(max_length=100)
-    Duration = models.FloatField(max_length=2.2)
-    Notes = models.TextField()
-    Person = models.ForeignKey(Person,on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.Post, self.Type
 
 
 class subQul_Post(models.Model):

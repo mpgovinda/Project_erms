@@ -1,8 +1,8 @@
 from django.http import Http404
-# from django.contrib.auth import
 from django.shortcuts import render
 from django.shortcuts import RequestContext, redirect
 from datetime import date, datetime
+# from somewhere import handle_uploaded_file
 from .forms import *
 
 
@@ -12,7 +12,45 @@ def login(request):
 
 
 def hod(request):
-    return render(request, 'hod.html', {})
+    intr_count = Interview.objects.filter().count()
+    vcncy_count = Vacancy.objects.filter().count()
+    msg_count = Message_Recieve.objects.filter().count()
+    cv_count = Person.objects.filter().count
+    context={
+        'msg_count': msg_count,
+        'cv_count': cv_count,
+        'vcncy_count': vcncy_count,
+        'intr_count' : intr_count,
+    }
+    return render(request, 'hod.html', context)
+
+
+def hod_vacancy(request):
+    context = RequestContext(request)
+    if request.method == 'POST':
+        vacncy_form = VacancyForm(request.POST)
+        if vacncy_form.is_valid():
+            form = vacncy_form.save(commit=False)
+            form.save()
+            return redirect('/hod/hod_vacancy/succs/')
+        else:
+            print vacncy_form.errors
+    else:
+        vacncy_form = VacancyForm()
+    return render(request, 'hod_vacancy.html', {'v_form': vacncy_form}, context)
+
+
+def hod_vacancy_succs(request):
+    return render(request, 'hod_vacancy_succs.html', {})
+
+
+def hod_vacancy_test(request):
+    obj = Vacancy.objects.all()
+    return render(request, 'test_vacancy.html', {'obj': obj})
+
+
+def hod_auto_filter(request):
+    return render()
 
 
 def hod_cv(request):
@@ -25,27 +63,51 @@ def hod_inter(request):
     return render(request, 'hod_inter.html', {})
 
 
-def hod_inter_create(request):
+def hod_inter_choose_vacancy(request):
+    vacancy = Vacancy.objects.all()
+    context = {
+        'Vacn': vacancy,
+    }
+    return render(request, 'hod_inter_choose_vacancy.html',  context)
+
+
+def hod_view_vacancy(request, ID):
+    obj = Vacancy.objects.get(id=ID)
+    return render(request, 'hod_view_vacancy.html', {'obj': obj})
+
+
+def hod_inter_create(request, ID):
     context = RequestContext(request)
+    obj = Vacancy.objects.get(id=ID)
     if request.method == 'POST':
         inter_form = InterviewForm(request.POST)
-
         if inter_form.is_valid():
             inter = inter_form.save(commit=False)
-            inter.user = request.user
             inter.save()
-
-            return redirect('/hod/hod_inter/hod_succs')
+            return redirect('/hod/hod_inter/asng_cv/')
         else:
             print inter_form.errors
     else:
         inter_form = InterviewForm()
-    return render(request, 'hod_inter_create.html', {'inter_form': inter_form}, context)
+    return render(request, 'hod_inter_create.html', {'inter_form': inter_form, 'obj': obj}, context)
 
 
-# def hod_cv_filter(request):
-#     context = RequestContext(request)
-#     if request.method == request.GET('')
+def hod_inter_cv(request, ID):
+    cv_id = []
+    context = RequestContext(request)
+    cv = Person.objects.all()
+    if request.method == 'POST':
+        inter_form_2 = InterviewForm2(request.POST)
+        if inter_form_2.is_valid():
+            cv_id.append(ID)
+            inter = inter_form_2.save(commit=False)
+            inter.save()
+            return cv_id, redirect('/hod/hod_inter/creat2/')
+        else:
+            print inter_form_2.errors
+    else:
+        inter_form_2 = InterviewForm2()
+    return render(request, 'hod_inter_create_2.html', {'inter_form_2': inter_form_2, 'cv': cv, 'cv_id':cv_id}, context)
 
 
 def hod_succs(request):
@@ -53,35 +115,12 @@ def hod_succs(request):
 
 
 def hod_inter_overview(request):
-    inter_obj = Interview()
-    Date = date.today()
-    if inter_obj.Date == Date:
-        form = Interview.objects.all(Date=Date)
-        event = 'Today Interviews'
-        context1 = {
-            'event1': event,
-            'ovr_form_1': form,
-        }
-    if inter_obj.Date < Date:
-        form = Interview.objects.all(Date=Date)
-        event = 'Past Interviews'
-        context2 = {
-            'event2': event,
-            'ovr_form_2': form,
-        }
-    if inter_obj.Date > Date:
-        form = Interview.objects.all(Date=Date)
-        event = 'Future Interviews'
-        context3 = {
-            'event3': event,
-            'ovr_form_3': form,
-        }
+    inter_obj = Interview.objects.all()
+    context={
+        'inter_obj': inter_obj,
+    }
+    return render(request, 'hod_inter_overview.html', context)
 
-    return render(request, 'hod_inter_overview.html', (context1, context2, context3))
-
-
-# def hod_profile(request, NIC):
-#     return HttpResponse("<h1>Profile of NIC:"+NIC+"</h1>")
 
 def hod_profile(request, NIC):
     try:
