@@ -1,13 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from PIL import Image
-from time import time
-from django.utils.timezone import now
-
-
-
 
 # Create your models here.
+
 
 def Person_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -40,9 +35,10 @@ class Personal(models.Model):
     CVImage = models.FileField(upload_to=Person_directory_path,null = True,blank=True)
     PersonalHighlight = models.TextField(blank=True,null=True)
     DeptPost = models.ForeignKey("Post_Dept")
+    RecuritedPost = models.ForeignKey("Post")
 
     def __str__(self):
-        return self.FName,self.LName,self.FullName,self.Nationality
+        return self.FName, self.LName, self.FullName, self.Nationality
 
 
 class Skill(models.Model):
@@ -135,7 +131,7 @@ class Degree(models.Model):
     DegreeField = models.ForeignKey("DegreeField") #Egineering,Bio Science,Arts,IT
 
     def __str__(self):
-        return self.Degree,self.University
+        return self.Degree, self.University
 
 
 class DegreeField(models.Model):
@@ -148,6 +144,7 @@ class DegreeField(models.Model):
 class DegreeType(models.Model):
     Type = models.CharField(max_length=10)
     HierachyNumber = models.IntegerField()
+
     def __str__(self):
         return self.Type
 
@@ -162,7 +159,7 @@ class Personal_Degree(models.Model):
 
 
 class Degree_class(models.Model):
-    Class =  models.CharField(max_length=20)
+    Class = models.CharField(max_length=20)
 
     def __str__(self):
         return self.Class
@@ -173,6 +170,7 @@ class UserRole(models.Model):
 
     def __str__(self):
         return self.Role
+
 
 class Degree_For_Post(models.Model):
     Degree = models.ForeignKey(Degree)
@@ -186,7 +184,6 @@ class Users(models.Model):
     UPhoto = models.FileField(upload_to=User_directory_path,null = True,blank=True)
     Department = models.ForeignKey(Department)
     UserRole = models.ForeignKey(UserRole)
-
 
     def __str__(self):
         return self.UName
@@ -205,17 +202,24 @@ class Interview(models.Model):
     Vacancy = models.ForeignKey('Vacancy',on_delete=models.CASCADE)
     Department = models.ForeignKey(Department, on_delete=models.CASCADE)
     InterviewType = models.ForeignKey(InterviewType, on_delete=models.CASCADE)
-    Interviewer_Review = models.TextField(blank=True,null=True)
-    HOD_Review = models.TextField(blank=True,null=True)
-    HR_Review = models.TextField(blank=True,null=True)
-    NoOfPasses = models.PositiveIntegerField(blank=True,null=True)
-    NoOfFails = models.PositiveIntegerField(blank=True,null=True)
-    NoOfOnHolds = models.PositiveIntegerField(blank=True,null=True)
+    Interviewer_Review = models.TextField(blank=True, null=True)
+    HOD_Review = models.TextField(blank=True, null=True)
+    HR_Review = models.TextField(blank=True, null=True)
+    NoOfPasses = models.PositiveIntegerField(blank=True, null=True)
+    NoOfFails = models.PositiveIntegerField(blank=True, null=True)
+    NoOfOnHolds = models.PositiveIntegerField(blank=True, null=True)
+    InterviewNo = models.IntegerField() #NoOfIntDone + 1 in vacancy
+
+    def __str__(self):
+        return self.Time, self.Date, self.Venue, self.HOD, self.Vacancy, self.Department, self.InterviewType
 
 
 class Interview_Interviewer(models.Model):
     Interview = models.ForeignKey(Interview)
     Interviewer = models.ForeignKey(User)
+
+    def __str__(self):
+        return u'{}'.format(self.Interviewer)
 
 
 class Venue(models.Model):
@@ -228,9 +232,13 @@ class Venue(models.Model):
 class Vacancy(models.Model):
     DateOfPublish = models.DateField()
     ClosingDate = models.DateField()
-    NoOfIntDone = models.IntegerField()
+    NoOfIntDone = models.IntegerField(default=0) #should be auto increment
     NoOfPossitions = models.IntegerField()
     Post_Dept = models.ForeignKey(Post_Dept, on_delete=models.CASCADE)
+    done = models.BooleanField(default=False)
+
+    def __str__(self):
+        return u'{}'.format(self.Post_Dept)
 
 
 class Experience(models.Model):
@@ -245,7 +253,7 @@ class Experience(models.Model):
     Personal = models.ForeignKey(Personal,on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.Post,self.Type
+        return self.Post, self.Type
 
 
 class SubQualification(models.Model):
@@ -259,18 +267,18 @@ class SubQualification(models.Model):
     SpecialNotes = models.TextField(null=True,blank=True)
 
     def __str__(self):
-        return self.Subject,self.SubResult
+        return self.Subject, self.SubResult
 
 
 class subQul_Post(models.Model):
     QName = models.CharField(max_length=100)
     Subject = models.CharField
-    SubResult =  models.CharField(max_length=10)
+    SubResult = models.CharField(max_length=10)
     Post = models.ForeignKey(Post)
 
 
 class Exp_Post(models.Model):
-    ExPost =  models.ForeignKey(Post,related_name='ExPost')
+    ExPost = models.ForeignKey(Post,related_name='ExPost')
     Post = models.ForeignKey(Post)
     Duration = models.FloatField(max_length=2.2)
 

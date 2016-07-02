@@ -1,21 +1,18 @@
 {% load staticfiles %}
-{% load bootstrap %}
 {% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
 <head>
 
-    <title>Create Interview</title>
+    <title>Overview of Interviews</title>
     <link rel="stylesheet" href="{% static 'font-awesome-4.6.3/css/font-awesome.css' %}" >
     <link rel="stylesheet" href="{% static 'font-awesome-4.6.3/css/font-awesome.min.css' %}" >
     <link href="{% static 'core_bootstrap/css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static 'core_bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
-    <script src="{% static 'hod_bootstrap/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.js' %}"></script>
-
+{#    <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">#}
+{#    <link href="{% static 'hod_bootstrap/offcanvas.css' %}" rel="stylesheet">#}
   </head>
 
   <body>
@@ -40,7 +37,7 @@
                 </form>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="">
+                   <li class="">
                         <a href="/hod/hod_msg/recieve/">
                             <i class="fa fa-envelope" aria-hidden="false"></i></span>&nbsp; Inbox
                         </a>
@@ -61,8 +58,8 @@
     </nav>
 
     <div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3">
+  	    <div class="row">
+            <div class="col-sm-3">
             <!-- Left column -->
             <a href="#"><strong><i class="glyphicon glyphicon-wrench"></i> Tools</strong></a>
             <hr>
@@ -76,54 +73,59 @@
                     </ul>
             </ul>
         </div>
-            <div class="verticalLine">
-            </div>
-            <div class="col-sm-9">
-                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="panel-title">
-                                <i class="fa fa-pagelines pull-right"></i>
-                                <h4>Interview Form</h4>
-                            </div>
+            <div class="col-md-9">
+                <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <i class="fa fa-paper-plane pull-right"></i>
+                            <h4><strong>Overview</strong></h4>
                         </div>
-                        <div class="panel-body">
-                <form action="" method="post">{% csrf_token %}
-                    <div class="col-sm-6">
-                    {{ inter_form.Time|bootstrap }}
-                    {{ inter_form.Date|bootstrap }}
-                    {{ inter_form.Venue|bootstrap }}
-                    {{ inter_form.HOD|bootstrap }}
-                    <hr>
-                    <a class="btn btn-primary" href="/hod/hod_vacancy/test/succs/">Submit</a>
                     </div>
-                    <div class="col-sm-6">
-                    {{ inter_form.Vacancy|bootstrap }}
-                    {{ inter_form.Department|bootstrap }}
-                    {{ inter_form.InterviewType|bootstrap }}
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            You successfully created the Interview, Also you can assign Interviewers to it.
+                        </div>
+                        <a class="btn btn-success btn-lg" href="/hod/hod_vacancy/test/part2/inter_list/" role="button">&nbsp; Next<i class="fa fa-arrow-right pull-right"></i></a>
                     </div>
-                </form>
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <i class="fa fa-paper-plane pull-right"></i>
+                            <h4><strong>Overview</strong></h4>
+                        </div>
                     </div>
-
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            You successfully created the Interview, Also you can assign CVs to it.
+                        </div>
+                        <a class="btn btn-success btn-lg" href="/hod/hod_vacancy/test/part2/inter_list/" role="button">&nbsp; Next<i class="fa fa-arrow-right pull-right"></i></a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-     <div class="bottom">
-        <hr>
-           <footer>
-              <p><i>All Right Reserved</i> &copy; Erms 2016</p>
-           </footer>
-    </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+{#        <hr>#}
+{#           <footer>#}
+{#              <p><i>All Right Reserved</i> &copy; Erms 2016</p>#}
+{#           </footer>#}
+
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker1').datetimepicker();
-            });
-    </script>
-
+    <script src="{% static 'hod_bootstrap/jquery.min.js' %}"></script>
     <script>window.jQuery || document.write('<script src="{% static 'hod_bootstrap/jquery.min.js' %}"><\/script>')</script>
     <script src="{% static 'core_dootstrap/js/bootstrap.min.js' %}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
