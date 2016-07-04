@@ -76,10 +76,11 @@
                         <div class="panel-heading">
                             <div class="panel-title">
                                 <i class="fa fa-paper-plane pull-right"></i>
-                                <h4>Interview</h4>
+                                <h4>Details</h4>
                             </div>
                         </div>
                         <div class="panel-body">
+                            <h3><b>Basic Details</b></h3><br>
                             <label><strong>Time:</strong></label>
                             {{ inter_obj.Time }}<br>
                             <label><strong>Date:</strong></label>
@@ -94,6 +95,45 @@
                             {{ inter_obj.Department }}<br>
                             <label><strong>Type of Interview:</strong></label>
                             {{ inter_obj.InterviewType }}<br>
+                            <hr>
+                            <h3><b>Interviewers Details</b></h3><br>
+                            <div class="table-responsive">
+                                 <table class="table table-striped">
+                                    {% for b in viewer %}
+                                        <tr>
+                                            <th>{{ b.User }}</th>
+                                            <th>{{ b.Post }}</th>
+                                            <th>{{ b.Department }}</th>
+                                            </tr>
+                                        {% endfor %}
+                                 </table>
+                            </div>
+                            <hr>
+                            <h3><b>Curriculum Vitae's Details</b></h3><br>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    {% for b in cv %}
+                                        <tr>
+                                            <th>{{ b.NIC }}</th>
+                                            <th>{{ b.FName }}</th>
+                                            <th>{{ b.Email }}</th>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <hr>
+                            <h3><b>Review Details</b></h3><br>
+                                <label><strong>Head of Department Review:</strong></label><br>
+                                    {{ inter_obj.HOD_Review }}
+                                <label><strong>Human Resource Review:</strong></label><br>
+                                    {{ inter_obj.HR_Review }}
+                                <label><strong>Interviewer Review:</strong></label><br>
+                                    {{ inter_obj.Interviewer_Review }}
+                            <hr>
+                                <form method="post">{% csrf_token %}
+                                    {{ form|bootstrap }}
+                                    <button type="submit" class="btn btn-success pull-right" href="/hod/hod_inter/hod_inter_overview/view/{{ inter_obj.id }}/">Submit</button>
+                                </form>
                         </div>
                     </div>
             </div>

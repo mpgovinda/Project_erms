@@ -79,34 +79,31 @@
             <div class="verticalLine">
             </div>
             <div class="col-sm-9">
-                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="panel-title">
-                                <i class="fa fa-pagelines pull-right"></i>
-                                <h4>Interview Form</h4>
-                            </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <i class="fa fa-pagelines pull-right"></i>
+                            <h4>Interview Form</h4>
                         </div>
-                        <div class="panel-body">
-                <form action="" method="post">{% csrf_token %}
-                    <div class="col-sm-6">
-                    {{ inter_form.Time|bootstrap }}
-                    {{ inter_form.Date|bootstrap }}
-                    {{ inter_form.Venue|bootstrap }}
-                    {{ inter_form.HOD|bootstrap }}
-                    <hr>
-                    <a class="btn btn-primary" href="/hod/hod_vacancy/test/succs/">Submit</a>
                     </div>
-                    <div class="col-sm-6">
-                    {{ inter_form.Vacancy|bootstrap }}
-                    {{ inter_form.Department|bootstrap }}
-                    {{ inter_form.InterviewType|bootstrap }}
-                    </div>
-                </form>
-                    </div>
-
+                    <div class="panel-body">
+                        <form action="" method="post">{% csrf_token %}
+                            <div class="col-sm-6">
+                                {{ inter_form.Time|bootstrap }}
+                                {{ inter_form.Date|bootstrap }}
+                                {{ inter_form.Post|bootstrap }}
+                                <hr>
+                                <button type="submit" class="btn btn-primary" >Submit</button>
+                            </div>
+                            <div class="col-sm-6">
+                                {{ inter_form.Venue|bootstrap }}
+                                {{ inter_form.InterviewType|bootstrap }}
+                            </div>
+                            </form>
+                     </div>
+                </div>
             </div>
         </div>
-    </div>
      <div class="bottom">
         <hr>
            <footer>
@@ -118,12 +115,6 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker1').datetimepicker();
-            });
-    </script>
-
     <script>window.jQuery || document.write('<script src="{% static 'hod_bootstrap/jquery.min.js' %}"><\/script>')</script>
     <script src="{% static 'core_dootstrap/js/bootstrap.min.js' %}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

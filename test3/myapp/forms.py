@@ -21,6 +21,7 @@ class PersonForm(forms.ModelForm):
                   'Email', 'DeptPost', 'FacebookProf', 'DateRecieved',
                   'PersonalHighlight', 'LinkedInProf', 'Objective'
                   ]
+        exclude = ['InterviewNo']
 
 
 class InterviewForm(forms.ModelForm):
@@ -29,7 +30,16 @@ class InterviewForm(forms.ModelForm):
 
     class Meta:
         model = Interview
+        fields = ['Time', 'Date', 'Venue', 'InterviewType', 'Post']
         exclude = ['NoOfPasses', 'NoOfFails', 'NoOfOnHolds', 'Interviewer_Review', 'HOD_Review', 'HR_Review']
+
+
+class InterReviewForm(forms.ModelForm):
+
+    class Meta:
+        model = Interview
+        fields = ['HOD_Review']
+        exclude = ['NoOfPasses', 'NoOfFails', 'NoOfOnHolds', 'Interviewer_Review', 'Time', 'Date', 'Venue', 'HOD', 'Department', 'InterviewType', 'HR_Review', 'InterviewNo', 'Vacancy']
 
 
 class InterviewForm2(forms.ModelForm):
@@ -76,6 +86,7 @@ class VacancyForm(forms.ModelForm):
     class Meta:
         model = Vacancy
         fields = ['Post_Dept', 'NoOfPossitions', 'NoOfIntDone', 'DateOfPublish', 'ClosingDate']
+        exclude = ['done']
 
 
 class HodReviewForm(forms.ModelForm):
