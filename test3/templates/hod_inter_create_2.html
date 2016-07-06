@@ -106,7 +106,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
-                                    <th><a class="btn btn-success" href="/hod/hod_inter/hod_inter_overview/">Done</a></th>
+                                    <th><a class="btn btn-success" href="/hod/hod_inter/hod_inter_overview/" id="myButton">Done</a></th>
                                 </tr>
                          </table>
                          </form>
@@ -122,6 +122,11 @@
         </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
+    <script>
+        $('#myButton').one('submit', function() {
+        $(this).find('input[type="submit"]').attr('disabled','disabled');
+        });
+    </script>
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{% static 'hod_bootstrap/jquery.min.js' %}"></script>
     <script>window.jQuery || document.write('<script src="{% static 'hod_bootstrap/jquery.min.js' %}"><\/script>')</script>

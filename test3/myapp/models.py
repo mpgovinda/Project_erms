@@ -45,6 +45,9 @@ class Personal_Post_Dept(models.Model): # add by hr
     Personal = models.ForeignKey(Personal)
     Post_Dept = models.ForeignKey('Post_Dept')
 
+    def __str__(self):
+        return u'{}'.format(self.Personal)
+
 
 class Skill(models.Model):
     Skill = models.CharField(max_length=100)
@@ -273,7 +276,7 @@ class SubQualification(models.Model):
     SpecialNotes = models.TextField(null=True,blank=True)
 
     def __str__(self):
-        return self.Subject, self.SubResult
+        return self.Subject
 
 
 class subQul_Post(models.Model):

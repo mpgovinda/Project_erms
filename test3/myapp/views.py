@@ -9,6 +9,8 @@ from django.http import Http404
 from django.db.models import Q
 from .forms import *
 
+count = 0
+
 
 def login(request):
     form = LoginForm()
@@ -19,7 +21,7 @@ def hod(request):
     intr_count = Interview.objects.filter().count()
     vcncy_count = Vacancy.objects.filter().count()
     msg_count = Messages.objects.filter().count()
-    cv_count = Personal.objects.filter().count
+    cv_count = Personal_Post_Dept.objects.filter().count
     context={
         'msg_count': msg_count,
         'cv_count': cv_count,
@@ -58,9 +60,16 @@ def hod_auto_filter(request):
 
 
 def hod_cv(request):
-    form = Personal.objects.all()
-    # form2 = Degree.objects.all()
-    return render(request, 'hod_cv.html', {'form_cv': form})
+    usr = Users.objects.get(User=request.user)
+    post_dept = Post_Dept.objects.filter(Dept=usr.Department)
+    return render(request, 'hod_cv.html', {'post': post_dept})
+
+
+def hod_cv_list(request, post_id):
+    post_dept = Post_Dept.objects.get(id=post_id)
+    form_cv = Personal_Post_Dept.objects.filter(Post_Dept=post_dept)
+    count = form_cv.count()
+    return render(request, 'hod_cv_list.html', {'cv': form_cv})
 
 
 def hod_inter(request):
@@ -153,25 +162,30 @@ def hod_inter_list_cv(request):
 
 def hod_pre_cv_list(request, iid):
     inter = Interview.objects.get(id=iid)
-    cv = Personal.objects.all()
+    usr = Users.objects.get(User=request.user)
+    post = Post_Dept.objects.all()
+    cv = Personal_Post_Dept.objects.all()
     return render(request, 'hod_inter_create_3.html', {'cv': cv, 'inter': inter})
 
 
 def hod_inter_cv(request, iid, pid):
     context = RequestContext(request)
     inter = Interview.objects.get(id=iid)
+    post = Post.objects.get(id=inter.Post_id)
+    usr = Users.objects.get(User=request.user)
+    post_dept = Post_Dept.objects.get(Department=usr.Department)
+    personal_cv = Personal_Post_Dept.objects.filter()
+    # qual = subQul_Post.objects.get(Post=inter.Post_id)
+    # sub = SubQualification.objects.get(QName__contains=qual.QName)
     cv = Personal.objects.all()
     cv_sp = Personal.objects.get(id=pid)
     form = Personal_Interview(Interview=inter, Personal=cv_sp)
     form.save()
-    # if request.method == 'POST':
-    #     qual = subQul_Post.objects.get(Post=inter.Post)
     #     sub =  SubQualification.objects.filter(QName__contains=qual.QName)
     #     ex_post = Exp_Post.objects.get(Post=inter.Post)
     #     exp = Experience.objects.filter(Post__contains=ex_post.Post).filter(Duration__contains=ex_post.Duration)
     #     p = Personal_Interview_viewer.objects.filter(Q(CV_Status.objects.get(id=1))|Q(CV_Status.objects.get(id=3))) #1 means pass, 2 means failed , 3 means on hold
-    #     y = Interview.objects.filter(InterviewNo=1)
-    #     return redirect('/hod/hod_vacancy/test/part2/inter_list/(\d+)/(\d+)/')
+
     return render(request, 'hod_inter_create_3.html', {'cv': cv, 'inter': inter}, context)
 
 
@@ -195,7 +209,7 @@ def hod_succs(request):
 
 def hod_inter_overview(request):
     inter_obj = Interview.objects.all()
-    context={
+    context = {
         'inter_obj': inter_obj,
     }
     return render(request, 'hod_inter_overview.html', context)
@@ -219,9 +233,9 @@ def hod_inter_view(request, id):
     return render(request, 'hod_inter_view.html', {'inter_obj': inter_obj, 'viewer': viewer, 'cv': cv, 'form': form}, context)
 
 
-def hod_profile(request, NIC):
+def hod_profile(request, id):
     try:
-        profile = Personal.objects.get(NIC=NIC)
+        profile = Personal.objects.get(id=id)
         context = RequestContext(request)
         if request.method == 'POST':
             hod = HodReviewForm(request.POST, request.FILES)

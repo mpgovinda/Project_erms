@@ -77,7 +77,7 @@
                         <div class="panel-heading">
                             <div class="panel-title">
                                 <i class="fa fa-paper-plane pull-right"></i>
-                                <h4>Profile Table</h4>
+                                <h4>Vacancy List</h4>
                             </div>
                         </div>
                         <div class="panel-body">
@@ -85,19 +85,17 @@
                     <table class="table table-striped">
                         <thead class="thead-default">
                         <tr>
-                            <th>NIC</th>
-                            <th>FName</th>
-                            <th>Email</th>
-                            <th>Select CV</th>
+                            <th>Post</th>
+                            <th>Field</th>
+                            <th>Assigned CV</th>
                         </tr>
                         </thead>
-                        {% for b in form_cv %}
+                        {% for b in post %}
                         <tr>
-                            <th>{{ b.NIC }}</th>
-                            <th>{{ b.FName }}</th>
-                            <th>{{ b.Email }}</th>
+                            <th>{{ b.Post.Post }}</th>
+                            <th>{{ b.Post.Field }}</th>
                             <th>
-                                <a class="btn btn-primary" href="/hod/hod_cv/{{ b.NIC }}/">View</a>
+                                <a class="btn btn-primary" href="/hod/hod_cv/cv_list/{{ b.id }}/">View</a>
                             </th>
                         </tr>
                         {% endfor %}
