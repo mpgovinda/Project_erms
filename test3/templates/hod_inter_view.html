@@ -110,7 +110,7 @@
                                             <th>{{ b.Interviewer.username }}</th>
                                             <th>{{ b.Interviewer.email }}</th>
                                         </tr>
-                                        {% endfor %}
+                                    {% endfor %}
                                  </table>
                             </div>
                             <hr>
@@ -121,12 +121,18 @@
                                             <th>ID</th>
                                             <th>Name</th>
                                             <th>Email</th>
+                                            <th>Pass</th>
+                                            <th>Fail</th>
+                                            <th>On Hold</th>
                                         </tr>
                                     {% for b in cv %}
                                         <tr>
                                             <th>{{ b.Personal.id }}</th>
                                             <th>{{ b.Personal.FName }}</th>
                                             <th>{{ b.Personal.Email }}</th>
+                                            <th><button type="submit" class="btn btn-success " href="/hod/hod_inter/hod_inter_overview/view/{{ inter_obj.id }}/{{ b.Personal.id }}/{{ pass }}/">Submit</button></th>
+                                            <th><button type="submit" class="btn btn-danger " href="/hod/hod_inter/hod_inter_overview/view/{{ inter_obj.id }}/{{ b.Personal.id }}/{{ fail }}/">Submit</button></th>
+                                            <th><button type="submit" class="btn btn-warning " href="/hod/hod_inter/hod_inter_overview/view/{{ inter_obj.id }}/{{ b.Personal.id }}/{{ onhold }}/">Submit</button></th>
                                         </tr>
                                     {% endfor %}
                                 </table>
@@ -140,9 +146,10 @@
                                 <label><strong>Interviewer Review:</strong></label>
                                     {{ inter_obj.Interviewer_Review }}<br>
                             <hr>
-                                <form method="post">{% csrf_token %}
-                                    {{ form|bootstrap }}
-                                    <button type="submit" class="btn btn-success pull-right" href="/hod/hod_inter/hod_inter_overview/view/{{ inter_obj.id }}/">Submit</button>
+                                <form method="post" action="/hod/hod_inter/hod_inter_overview/view/{{ inter_obj.id }}">
+                                    {% csrf_token %}
+                                    {{ form.HOD_Review|bootstrap }}
+                                    <input type="submit" class="btn btn-success pull-right">
                                 </form>
                         </div>
                     </div>

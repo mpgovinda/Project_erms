@@ -218,6 +218,7 @@ class Interview(models.Model):
     NoOfOnHolds = models.PositiveIntegerField(blank=True, null=True)
     InterviewNo = models.IntegerField(blank=True, null=True) #NoOfIntDone + 1 in vacancy NEWLY ADDED FIELD
     Post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    done = models.BooleanField(default=False)
 
     def __str__(self):
         return u'{}'.format(self.Vacancy)

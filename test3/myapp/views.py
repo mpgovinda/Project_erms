@@ -9,7 +9,6 @@ from django.http import Http404
 from django.db.models import Q
 from .forms import *
 
-count = 0
 
 
 def login(request):
@@ -31,12 +30,19 @@ def hod(request):
     return render(request, 'hod.html', context)
 
 
-def hod_vacancy(request):
+def hod_post_list(request):
+    usr = Users.objects.get(User=request.user)
+    post_dept = Post_Dept.objects.filter(Dept=usr.Department)
+    return render(request, 'hod_post_list.html', {'post': post_dept})
+
+
+def hod_vacancy(request, vid):
     context = RequestContext(request)
     if request.method == 'POST':
         vacncy_form = VacancyForm(request.POST)
         if vacncy_form.is_valid():
             form = vacncy_form.save(commit=False)
+            form.Post_Dept_id = vid
             form.save()
             return redirect('/hod/hod_vacancy/succs/')
         else:
@@ -131,7 +137,8 @@ def hod_inter_create_succs(request):
 
 
 def hod_inter_list_interviewer(request):
-    inter = Interview.objects.all()
+    usr = Users.objects.get(User=request.user)
+    inter = Interview.objects.filter(Department=usr.Department)
     return render(request, 'hod_inter_list_inter.html', {'inter': inter})
 
 
@@ -156,15 +163,16 @@ def hod_inter_interviewer_2(request, iid, pid):
 
 
 def hod_inter_list_cv(request):
-    inter = Interview.objects.all()
+    usr = Users.objects.get(User=request.user)
+    inter = Interview.objects.filter(Department=usr.Department)
     return render(request, 'hod_inter_list_cv.html', {'inter': inter})
 
 
 def hod_pre_cv_list(request, iid):
     inter = Interview.objects.get(id=iid)
     usr = Users.objects.get(User=request.user)
-    post = Post_Dept.objects.all()
-    cv = Personal_Post_Dept.objects.all()
+    post = Post_Dept.objects.get(Post=inter.Post_id)
+    cv = Personal_Post_Dept.objects.filter(Post_Dept=post)
     return render(request, 'hod_inter_create_3.html', {'cv': cv, 'inter': inter})
 
 
@@ -173,19 +181,11 @@ def hod_inter_cv(request, iid, pid):
     inter = Interview.objects.get(id=iid)
     post = Post.objects.get(id=inter.Post_id)
     usr = Users.objects.get(User=request.user)
-    post_dept = Post_Dept.objects.get(Department=usr.Department)
-    personal_cv = Personal_Post_Dept.objects.filter()
-    # qual = subQul_Post.objects.get(Post=inter.Post_id)
-    # sub = SubQualification.objects.get(QName__contains=qual.QName)
-    cv = Personal.objects.all()
-    cv_sp = Personal.objects.get(id=pid)
-    form = Personal_Interview(Interview=inter, Personal=cv_sp)
+    post = Post_Dept.objects.get(Post=inter.Post_id)
+    cv = Personal_Post_Dept.objects.filter(Post_Dept=post)
+    cv_sp = Personal_Post_Dept.objects.get(id=pid)
+    form = Personal_Interview(Interview=inter, Personal=cv_sp.Personal)
     form.save()
-    #     sub =  SubQualification.objects.filter(QName__contains=qual.QName)
-    #     ex_post = Exp_Post.objects.get(Post=inter.Post)
-    #     exp = Experience.objects.filter(Post__contains=ex_post.Post).filter(Duration__contains=ex_post.Duration)
-    #     p = Personal_Interview_viewer.objects.filter(Q(CV_Status.objects.get(id=1))|Q(CV_Status.objects.get(id=3))) #1 means pass, 2 means failed , 3 means on hold
-
     return render(request, 'hod_inter_create_3.html', {'cv': cv, 'inter': inter}, context)
 
 
@@ -221,15 +221,17 @@ def hod_inter_view(request, id):
     cv = Personal_Interview.objects.filter(Interview=inter_obj.id)
     context = RequestContext(request)
     if request.method == 'POST':
-        form = InterReviewForm(request.POST)
+        form = HodReviewForm(request.POST)
         if form.is_valid():
-            form = form.save(commit=False)
-            form.save()
-            return redirect('/hod/hod_inter/hod_inter_overview/view/(\d+)/')
+            obj = Interview.objects.get(id=id)
+            obj.HOD_Review = form.cleaned_data['HOD_Review']
+            obj.Vacancy.NoOfIntDone = obj.Vacancy.NoOfIntDone+1
+            obj.save()
+            return redirect('/hod/hod_inter/hod_inter_overview/view/%s'%id)
         else:
             print form.errors
     else:
-        form = InterReviewForm()
+        form = HodReviewForm()
     return render(request, 'hod_inter_view.html', {'inter_obj': inter_obj, 'viewer': viewer, 'cv': cv, 'form': form}, context)
 
 
@@ -257,56 +259,16 @@ def hod_msg(request):
     return render(request, 'hod_msg.html', {})
 
 
-def send_msg(request):
-    context = RequestContext(request)
-    if request.method == 'POST':
-        msg_form = MessageForm(request.POST)
-        if msg_form.is_valid():
-            msgData = msg_form.save(commit=False)
-            msgData.Send = request.user
-            msgData.SentDate = now()
-            msgData.SentTime = now()
-            msgData.save()
-            return redirect('/int/send_msg')
-        else:
-            print(msg_form.errors)
-    else:
-        msg_form = MessageForm()
-    return render(request, 'hod_send_msg.html', {'msg_form': msg_form}, context)
+def selection_interview(request):
+    usr = Users.objects.get(User=request.user)
+    inter = Interview.objects.filter(Department=usr.Department)
+    return render(request, 'selection_interview.html', {'inter': inter})
 
 
-def hod_msg_succs(request):
-    msg_obj = Messages()
-    if request.user.is_authenticated():
-        username = request.user.username
-        msg_obj.Sende = username
-        msg_obj.SentDate = date.today()
-        msg_obj.SentTime = datetime.time()
-        dsc = True
-        context = {
-            'dsc': dsc,
-        }
-    else:
-        error = 'User authentication error'
-        context = {
-            'error': error,
-        }
-    return render(request, 'hod_msg_succs.html', context)
-
-
-def hod_recieve_msg(request):
-    usr = request.user
-    if request.user.is_authenticated():
-        msg = Messages.objects.filter(Recieve=usr.id)
-        context = {
-            'msg': msg,
-        }
-    else:
-        error = 'User is not Authenticated one.'
-        context = {
-            'error': error,
-        }
-    return render(request, 'hod_recieve_msg.html', context)
+def selection_cv(request, iid):
+    inter = Interview.objects.get(id=iid)
+    cv = Personal_Interview.objects.filter(Interview=inter)
+    return render(request, 'selection_cv.html', {'personal': cv})
 
 
 def deo(request):

@@ -92,7 +92,12 @@
                             <th>{{ b.Post_Dept }}</th>
                             <th>{{ b.DateOfPublish }}</th>
                             <th><a class="btn btn-warning" href="/hod/hod_vacancy/test/vacancy/{{ b.id }}/">View</a></th>
-                            <th><a class="btn btn-primary" href="/hod/hod_vacancy/test/{{ b.id }}/">Set Interview</a></th>
+                            {% if NoOfInt > NoOfIntDone %}
+                                <th><a class="btn btn-primary" href="/hod/hod_vacancy/test/{{ b.id }}/">Set Interview</a></th>
+                            {% else %}
+                                <th><a class="btn btn-primary disabled" href="/hod/hod_vacancy/test/{{ b.id }}/">Set Interview</a></th>
+                            {% endif %}
+
                         </tr>
                         {% endfor %}
                     </table>

@@ -99,12 +99,12 @@
                                          <th>Select CV</th>
                                      </tr>
                                      </thead>
-                                     {% for b in cv.Personal %}
+                                     {% for b in cv %}
                                      <tr>
-                                         <th>{{ b.NIC }}</th>
-                                         <th>{{ b.FName }}</th>
-                                         <th>{{ b.Email }}</th>
-                                         <th><a class="btn btn-warning" href="/hod/hod_cv/{{ b.NIC }}/">View</a></th>
+                                         <th>{{ b.Personal.NIC }}</th>
+                                         <th>{{ b.Personal.FullName }}</th>
+                                         <th>{{ b.Personal.Email }}</th>
+                                         <th><a class="btn btn-warning" href="/hod/hod_cv/{{ b.Personal.id }}/">View</a></th>
                                          <th>
                                              <a type="button" class="btn btn-primary" href="/hod/hod_vacancy/test/part2/inter_list_cv/{{ inter.id }}/{{ b.id }}/">Assign</a>
                                          </th>
