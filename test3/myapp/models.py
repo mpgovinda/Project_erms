@@ -38,7 +38,7 @@ class Personal(models.Model):
     RecuritedPost = models.ForeignKey("Post") #NEWLY ADDED FIELD
 
     def __str__(self):
-        return self.FName
+        return self.FullName
 
 
 class Personal_Post_Dept(models.Model): # add by hr
@@ -77,6 +77,10 @@ class SpecialAchievements(models.Model):
 class Personal_Interview(models.Model):
     Personal = models.ForeignKey(Personal)
     Interview = models.ForeignKey("Interview")
+    Status = models.ForeignKey("CV_Status", null=True)
+
+    def __str__(self):
+        return u'{}'.format(self.Personal)
 
 
 class Personal_Interview_viewer(models.Model):
@@ -84,7 +88,9 @@ class Personal_Interview_viewer(models.Model):
     Personal_Interview = models.ForeignKey(Personal_Interview)
     Comment = models.TextField()
     Rate = models.PositiveSmallIntegerField()
-    Status = models.ForeignKey("CV_Status", null=True)
+
+    def __str__(self):
+        return u'{}'.format(self.Personal_Interview)
 
 
 class CV_Status(models.Model):
@@ -216,7 +222,7 @@ class Interview(models.Model):
     NoOfPasses = models.PositiveIntegerField(blank=True, null=True)
     NoOfFails = models.PositiveIntegerField(blank=True, null=True)
     NoOfOnHolds = models.PositiveIntegerField(blank=True, null=True)
-    InterviewNo = models.IntegerField(blank=True, null=True) #NoOfIntDone + 1 in vacancy NEWLY ADDED FIELD
+    InterviewNo = models.IntegerField(blank=True, null=True, default=0) #NoOfIntDone + 1 in vacancy NEWLY ADDED FIELD
     Post = models.ForeignKey(Post, on_delete=models.CASCADE)
     done = models.BooleanField(default=False)
 
@@ -263,7 +269,7 @@ class Experience(models.Model):
     Personal = models.ForeignKey(Personal, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.Post, self.Type
+        return u'{}'.format(self.Post)
 
 
 class SubQualification(models.Model):

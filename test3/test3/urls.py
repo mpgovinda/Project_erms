@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^hod/$', hod),
     url(r'^hod/selection_inter/', selection_interview),
     url(r'^hod/selection_cv/(\d+)/', selection_cv),
+    url(r'^hod/selection_profile/(\d+)/', selection_profile),
     url(r'^hod/post_list/$', hod_post_list),
     url(r'^hod/hod_vacancy/(\d+)/$', hod_vacancy),
     url(r'^hod/hod_vacancy/succs/$', hod_vacancy_succs),

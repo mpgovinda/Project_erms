@@ -36,6 +36,13 @@ def hod_post_list(request):
     return render(request, 'hod_post_list.html', {'post': post_dept})
 
 
+def hod_vacan_list(request):
+    usr = Users.objects.get(User=request.user)
+    post_dept = Post_Dept.objects.filter(Dept=usr.Department)
+    obj = Vacancy.objects.all()
+    return render(request, 'test_vacancy.html', {'obj': obj})
+
+
 def hod_vacancy(request, vid):
     context = RequestContext(request)
     if request.method == 'POST':
@@ -122,7 +129,7 @@ def hod_inter_create(request, vid):
             inter.Department = usr.Department
             inter.HOD = request.user
             inter.Vacancy = obj
-            inter.InterviewNo = 1
+            inter.InterviewNo=inter.InterviewNo + 1
             inter.save()
             return redirect('/hod/hod_vacancy/test/succs/')
         else:
@@ -171,9 +178,9 @@ def hod_inter_list_cv(request):
 def hod_pre_cv_list(request, iid):
     inter = Interview.objects.get(id=iid)
     usr = Users.objects.get(User=request.user)
-    post = Post_Dept.objects.get(Post=inter.Post_id)
-    cv = Personal_Post_Dept.objects.filter(Post_Dept=post)
-    return render(request, 'hod_inter_create_3.html', {'cv': cv, 'inter': inter})
+    exp = Exp_Post.objects.filter(Post=inter.Post)
+    xpost = Experience.objects.all()
+    return render(request, 'hod_inter_create_3.html', {'xpost': xpost, 'inter': inter, 'exp': exp})
 
 
 def hod_inter_cv(request, iid, pid):
@@ -181,12 +188,12 @@ def hod_inter_cv(request, iid, pid):
     inter = Interview.objects.get(id=iid)
     post = Post.objects.get(id=inter.Post_id)
     usr = Users.objects.get(User=request.user)
-    post = Post_Dept.objects.get(Post=inter.Post_id)
-    cv = Personal_Post_Dept.objects.filter(Post_Dept=post)
-    cv_sp = Personal_Post_Dept.objects.get(id=pid)
-    form = Personal_Interview(Interview=inter, Personal=cv_sp.Personal)
+    exp = Exp_Post.objects.filter(Post=inter.Post)
+    xpost = Experience.objects.all()
+    cv_sp = Personal.objects.get(id=pid)
+    form = Personal_Interview(Interview=inter, Personal=cv_sp)
     form.save()
-    return render(request, 'hod_inter_create_3.html', {'cv': cv, 'inter': inter}, context)
+    return render(request, 'hod_inter_create_3.html', {'xpost': xpost, 'inter': inter, 'exp': exp}, context)
 
 
 def hod_view_inter(request, ID):
@@ -225,6 +232,7 @@ def hod_inter_view(request, id):
         if form.is_valid():
             obj = Interview.objects.get(id=id)
             obj.HOD_Review = form.cleaned_data['HOD_Review']
+            obj.done = form.cleaned_data['done']
             obj.Vacancy.NoOfIntDone = obj.Vacancy.NoOfIntDone+1
             obj.save()
             return redirect('/hod/hod_inter/hod_inter_overview/view/%s'%id)
@@ -238,6 +246,7 @@ def hod_inter_view(request, id):
 def hod_profile(request, id):
     try:
         profile = Personal.objects.get(id=id)
+        exper = Experience.objects.filter(Personal=profile)
         context = RequestContext(request)
         if request.method == 'POST':
             hod = HodReviewForm(request.POST, request.FILES)
@@ -252,7 +261,7 @@ def hod_profile(request, id):
             hod = HodReviewForm()
     except Personal.DoesNotExist:
         raise Http404("Profile does not exist")
-    return render(request, 'hod_cv_profile.html', {'hod_form': hod, 'pro_form': profile}, context)
+    return render(request, 'hod_cv_profile.html', {'hod_form': hod, 'pro_form': profile, 'exper': exper}, context)
 
 
 def hod_msg(request):
@@ -269,6 +278,23 @@ def selection_cv(request, iid):
     inter = Interview.objects.get(id=iid)
     cv = Personal_Interview.objects.filter(Interview=inter)
     return render(request, 'selection_cv.html', {'personal': cv})
+
+
+def selection_profile(request, pid):
+    cv = Personal_Interview.objects.get(id=pid)
+    comment = Personal_Interview_viewer.objects.filter(Personal_Interview=pid)
+    if request.method == 'POST':
+        form = SelectStatusForm(request.POST)
+        if form.is_valid():
+            cv_status = Personal_Interview.objects.get(id=pid)
+            cv_status.Status = form.cleaned_data['Status']
+            cv_status.save()
+            return redirect('/hod/selection_profile/%s/'% id)
+        else:
+            print form.errors
+    else:
+        form = SelectStatusForm()
+    return render(request, 'selection_profile.html', {'comment': comment, 'cv':cv, 'form':form})
 
 
 def deo(request):
@@ -302,8 +328,9 @@ def date_time(request):
 
 
 def subv(request):
+    context = RequestContext(request)
     if request.method == 'POST':
-        sub = SubForm(request.POST)
+        sub = ExperienceForm(request.POST)
         if sub.is_valid():
             form = sub.save(commit=False)
             form.save()
@@ -311,5 +338,5 @@ def subv(request):
         else:
             print sub.errors
     else:
-        sub = SubForm()
-    return render(request, 'sub.html', {'sub': sub})
+        sub = ExperienceForm()
+    return render(request, 'sub.html', {'sub': sub}, context)
