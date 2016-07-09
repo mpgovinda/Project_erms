@@ -12,7 +12,7 @@
                     </div>
                     <div class="panel-body">
                         <form method="post" action="">
-                            <h4><b>Interviewers and their rates</b></h4><br>
+                            <h4><b><i>Interviewers and their rates</i></b></h4><br>
                             {% for x in comment %}
                             <div class="list-group-item">
                                 <label><strong>Name:</strong></label>
@@ -25,10 +25,9 @@
                             {% endfor %}
                             <hr>
                                 {{ form.Status|bootstrap }}<br>
-                            <button class="btn btn-success" type="button" href="/hod/selection_profile/{{ cv.id }}/">Submit</button>
+                            <button class="btn btn-success pull-right" type="button" href="/hod/selection_profile/{{ cv.id }}/">Submit</button>
                         </form>
                     </div>
-                </div>
                 </div>
             </div>
         </div>

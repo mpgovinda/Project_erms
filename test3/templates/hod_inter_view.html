@@ -70,16 +70,15 @@
                                 <label><strong>Interviewer Review:</strong></label>
                                     {{ inter_obj.Interviewer_Review }}<br>
                                 <label><strong>Interviewer Finish/Not:</strong></label>
-                                    {% if nter_obj.done == t %}
+                                    {% if inter_obj.done == True %}
                                         Finished<br>
-                                    {% else %}
+                                    {% else  %}
                                         Unfinished<br>
                                     {% endif %}
                             <hr>
                                 <form method="post" action="/hod/hod_inter/hod_inter_overview/view/{{ inter_obj.id }}">
                                     {% csrf_token %}
-                                    {{ form.done|bootstrap }}
-                                    {{ form.HOD_Review|bootstrap }}
+                                    {{ form|bootstrap }}
                                     <input type="submit" class="btn btn-success pull-right">
                                 </form>
                         </div>

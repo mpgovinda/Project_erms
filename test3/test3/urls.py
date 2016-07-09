@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^deo/deo_submit/$', deo_submit),
     url(r'^deo/deo_submit/deo_profile', deo_profile),
     url(r'^hod/$', hod),
+    url(r'^hod/selection/', selection),
     url(r'^hod/selection_inter/', selection_interview),
     url(r'^hod/selection_cv/(\d+)/', selection_cv),
     url(r'^hod/selection_profile/(\d+)/', selection_profile),

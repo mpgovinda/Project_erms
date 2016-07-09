@@ -64,12 +64,11 @@ def hod_vacancy_succs(request):
 
 
 def hod_vacancy_test(request):
-    obj = Vacancy.objects.all()
-    return render(request, 'test_vacancy.html', {'obj': obj})
-
-
-def hod_auto_filter(request):
-    return render()
+    usr = Users.objects.get(User=request.user)
+    pdept = Post_Dept.objects.filter(Dept=usr.Department)
+    inter = Interview.objects.filter(Department=usr.Department)
+    vacan = Vacancy.objects.all()
+    return render(request, 'test_vacancy.html', {'vacan': vacan, 'pdept': pdept, 'inter':inter})
 
 
 def hod_cv(request):
@@ -81,7 +80,6 @@ def hod_cv(request):
 def hod_cv_list(request, post_id):
     post_dept = Post_Dept.objects.get(id=post_id)
     form_cv = Personal_Post_Dept.objects.filter(Post_Dept=post_dept)
-    count = form_cv.count()
     return render(request, 'hod_cv_list.html', {'cv': form_cv})
 
 
@@ -121,6 +119,7 @@ def interview_view(request, vid):
 def hod_inter_create(request, vid):
     context = RequestContext(request)
     obj = Vacancy.objects.get(id=vid)
+    post = Post_Dept.objects.get(id=obj.Post_Dept_id)
     usr = Users.objects.get(User=request.user)
     if request.method == 'POST':
         inter_form = InterviewForm(request.POST)
@@ -128,6 +127,7 @@ def hod_inter_create(request, vid):
             inter = inter_form.save(commit=False)
             inter.Department = usr.Department
             inter.HOD = request.user
+            inter.Post = post.Post
             inter.Vacancy = obj
             inter.InterviewNo=inter.InterviewNo + 1
             inter.save()
@@ -177,10 +177,13 @@ def hod_inter_list_cv(request):
 
 def hod_pre_cv_list(request, iid):
     inter = Interview.objects.get(id=iid)
+    vacan = Vacancy.objects.get(Post_Dept_id=inter.Vacancy.Post_Dept.id)
     usr = Users.objects.get(User=request.user)
-    exp = Exp_Post.objects.filter(Post=inter.Post)
+    pdept = Post_Dept.objects.get(Dept=usr.Department, Post=vacan.Post_Dept.Post)
+    person_dept = Personal_Post_Dept.objects.filter(Post_Dept=pdept)
+    exp = Exp_Post.objects.filter(Post=pdept.Post)
     xpost = Experience.objects.all()
-    return render(request, 'hod_inter_create_3.html', {'xpost': xpost, 'inter': inter, 'exp': exp})
+    return render(request, 'hod_inter_create_3.html', {'xperince': xpost, 'inter': inter, 'exp': exp, 'pdept':pdept})
 
 
 def hod_inter_cv(request, iid, pid):
@@ -233,7 +236,8 @@ def hod_inter_view(request, id):
             obj = Interview.objects.get(id=id)
             obj.HOD_Review = form.cleaned_data['HOD_Review']
             obj.done = form.cleaned_data['done']
-            obj.Vacancy.NoOfIntDone = obj.Vacancy.NoOfIntDone+1
+            if obj.done==True:
+                obj.Vacancy.NoOfIntDone = obj.Vacancy.NoOfIntDone+1
             obj.save()
             return redirect('/hod/hod_inter/hod_inter_overview/view/%s'%id)
         else:
@@ -246,26 +250,22 @@ def hod_inter_view(request, id):
 def hod_profile(request, id):
     try:
         profile = Personal.objects.get(id=id)
-        exper = Experience.objects.filter(Personal=profile)
+        exper = Experience.objects.get(Personal=profile)
         context = RequestContext(request)
-        if request.method == 'POST':
-            hod = HodReviewForm(request.POST, request.FILES)
-            if hod.is_valid():
-                review = hod.save(commit=False)
-                review.user = request.user
-                review.save()
-                return redirect('')
-            else:
-                print hod.errors
-        else:
-            hod = HodReviewForm()
     except Personal.DoesNotExist:
         raise Http404("Profile does not exist")
-    return render(request, 'hod_cv_profile.html', {'hod_form': hod, 'pro_form': profile, 'exper': exper}, context)
+    return render(request, 'hod_cv_profile.html', {'pro_form': profile, 'exper': exper}, context)
 
 
 def hod_msg(request):
     return render(request, 'hod_msg.html', {})
+
+
+def selection(request):
+    passes = Personal_Interview.objects.filter(Status_id=1).count()
+    fails = Personal_Interview.objects.filter(Status_id=2).count()
+    onholds = Personal_Interview.objects.filter(Status_id=3).count()
+    return render(request, 'selection.html', {'p': passes, 'f': fails, 'o': onholds})
 
 
 def selection_interview(request):

@@ -36,7 +36,7 @@ class InterviewForm(forms.ModelForm):
 
     class Meta:
         model = Interview
-        fields = ['Time', 'Date', 'Venue', 'InterviewType', 'Post']
+        fields = ['Time', 'Date', 'Venue', 'InterviewType']
         exclude = ['NoOfPasses', 'NoOfFails', 'NoOfOnHolds', 'Interviewer_Review', 'HOD_Review', 'HR_Review']
 
 
@@ -84,7 +84,6 @@ class SpecializedAreaForm(forms.ModelForm):
 class VacancyForm(forms.ModelForm):
     DateOfPublish = forms.DateField(widget=DateInput())
     ClosingDate = forms.DateField(widget=DateInput())
-    # Post_Dept = models.ForeignKey(lable="Post")
 
     class Meta:
         model = Vacancy
@@ -93,6 +92,11 @@ class VacancyForm(forms.ModelForm):
 
 
 class HodReviewForm(forms.ModelForm):
+    done = forms.BooleanField(
+        label='Done',
+        required=True,
+        initial=False
+    )
 
     class Meta:
         model = Interview

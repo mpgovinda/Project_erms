@@ -67,7 +67,7 @@
                         <h3 class="section-title"><i class="fa fa-briefcase"></i> Experiences</h3>
                             <div class="summary">
                                 <label for="Objective"><b>Post: </b></label>
-                                    {{ exper.Post }}<br>
+                                    {{ exper.Post}}<br>
                                 <label for="SpecialNote"><b>Other Post: </b></label>
                                     {{ exper.AltPost }}<br>
                                 <label for="SpecialNote"><b>Field: </b></label>
@@ -87,16 +87,10 @@
                     </section><!--//section-->
                     <hr>
                     <section class="section summary-section">
-                        <h3 class="section-title"><i class="fa fa-briefcase"></i>Other Reviews</h3
+                        <h3 class="section-title"><i class="fa fa-briefcase"></i>Educational Qualifications</h3
                     </section><!--//section-->
                     <hr>
-                    <section class="section summary-section">
-                        <h3 class="section-title"><i class="fa fa-briefcase"></i>Write Reviews</h3>
-                            <form method="post">{% csrf_token %}
-                                {{ hod_form|crispy }}
-                                <button class="btn btn-success">Submit</button>
-                            </form><!--//summary-->
-                    </section><!--//section-->
+
                 </div><!--//profile-container-->
 
             </div>

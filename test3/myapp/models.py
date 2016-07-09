@@ -245,7 +245,7 @@ class Venue(models.Model):
         return self.HallName
 
 
-class Vacancy(models.Model):
+class Vacancy(models.Model): #No Of Interviews should come to this vacancy
     DateOfPublish = models.DateField()
     ClosingDate = models.DateField()
     NoOfIntDone = models.IntegerField(default=0) #should be auto increment
@@ -269,7 +269,7 @@ class Experience(models.Model):
     Personal = models.ForeignKey(Personal, on_delete=models.CASCADE)
 
     def __str__(self):
-        return u'{}'.format(self.Post)
+        return u'{}'.format(self.Personal)
 
 
 class SubQualification(models.Model):
@@ -297,6 +297,9 @@ class Exp_Post(models.Model):
     ExPost = models.ForeignKey(Post, related_name='ExPost')
     Post = models.ForeignKey(Post)
     Duration = models.FloatField(max_length=2.2)
+
+    def __str__(self):
+        return self.ExPost
 
 
 class Messages(models.Model):
