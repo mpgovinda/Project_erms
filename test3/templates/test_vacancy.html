@@ -25,7 +25,7 @@
                                 <tr>
                                     <th>{{ b.Post_Dept }}</th>
                                     <th>{{ b.DateOfPublish }}</th>
-                                    <th>{{ b.Post_Dept.Post.NoOfInterviews - b.NoOfIntDone }}</th>
+                                    <th>{{ b.Post_Dept.Post.NoOfInterviews}} -{{ b.NoOfIntDone }}</th>
                                     <th><a class="btn btn-warning" href="/hod/hod_vacancy/test/vacancy/{{ b.id }}/">View</a></th>
 
                                     {% if b.Post_Dept.Post.NoOfInterviews > b.NoOfIntDone %}

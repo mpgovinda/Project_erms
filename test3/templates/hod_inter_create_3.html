@@ -22,10 +22,10 @@
                                 <th>Select CV</th>
                             </tr>
                             </thead>
-                            {% for c in exp %}
-                                {{ c.ExPost }}
-                            {% endfor %}
-                            {% for c in exp %}
+{#                            {% for d in person_dept %}#}
+{#                                {{ c.ExPost }}#}
+
+                            {% for c in exp%}
                                 {% for b in xperince %}
                                     {% if c.ExPost == b.Post %}
                                         {{ b.Post }}
@@ -34,13 +34,20 @@
                                             <th>{{ b.Personal.FullName }}</th>
                                             <th>{{ b.Personal.Email }}</th>
                                             <th><a class="btn btn-warning" href="/hod/hod_cv/{{ b.Personal.id }}/">View</a></th>
-                                            <th>
-                                                <a type="button" class="btn btn-primary" href="/hod/hod_vacancy/test/part2/inter_list_cv/{{ inter.id }}/{{ b.Personal.id }}/">Assign</a>
-                                            </th>
+                                            {% if b.Personal.id == d.Personal.id %}
+                                                <th>
+                                                    <a type="button" class="btn btn-primary disabled" href="/hod/hod_vacancy/test/part2/inter_list_cv/{{ inter.id }}/{{ b.Personal.id }}/">Assign</a>
+                                                </th>
+                                            {% else %}
+                                                <th>
+                                                    <a type="button" class="btn btn-primary " href="/hod/hod_vacancy/test/part2/inter_list_cv/{{ inter.id }}/{{ b.Personal.id }}/">Assign</a>
+                                                </th>
+                                            {% endif %}
                                         </tr>
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
+{#                        {% endfor %}#}
                             <tr>
                                 <th></th>
                                 <th></th>

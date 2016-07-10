@@ -180,23 +180,24 @@ def hod_pre_cv_list(request, iid):
     vacan = Vacancy.objects.get(Post_Dept_id=inter.Vacancy.Post_Dept.id)
     usr = Users.objects.get(User=request.user)
     pdept = Post_Dept.objects.get(Dept=usr.Department, Post=vacan.Post_Dept.Post)
-    person_dept = Personal_Post_Dept.objects.filter(Post_Dept=pdept)
+    person_dept = Personal_Interview.objects.filter(Interview=inter)
     exp = Exp_Post.objects.filter(Post=pdept.Post)
     xpost = Experience.objects.all()
-    return render(request, 'hod_inter_create_3.html', {'xperince': xpost, 'inter': inter, 'exp': exp, 'pdept':pdept})
+    return render(request, 'hod_inter_create_3.html', {'xperince': xpost, 'inter': inter, 'exp': exp, 'pdept':pdept, 'person_dept':person_dept})
 
 
 def hod_inter_cv(request, iid, pid):
-    context = RequestContext(request)
     inter = Interview.objects.get(id=iid)
-    post = Post.objects.get(id=inter.Post_id)
+    vacan = Vacancy.objects.get(Post_Dept_id=inter.Vacancy.Post_Dept.id)
     usr = Users.objects.get(User=request.user)
-    exp = Exp_Post.objects.filter(Post=inter.Post)
+    pdept = Post_Dept.objects.get(Dept=usr.Department, Post=vacan.Post_Dept.Post)
+    person_dept = Personal_Interview.objects.filter(Interview=inter)
+    exp = Exp_Post.objects.filter(Post=pdept.Post)
     xpost = Experience.objects.all()
     cv_sp = Personal.objects.get(id=pid)
     form = Personal_Interview(Interview=inter, Personal=cv_sp)
     form.save()
-    return render(request, 'hod_inter_create_3.html', {'xpost': xpost, 'inter': inter, 'exp': exp}, context)
+    return render(request, 'hod_inter_create_3.html', {'xperince': xpost, 'inter': inter, 'exp': exp, 'pdept':pdept, 'person_dept':person_dept})
 
 
 def hod_view_inter(request, ID):
@@ -217,8 +218,20 @@ def hod_succs(request):
     return render(request, 'hod_succs.html', {})
 
 
-def hod_inter_overview(request):
-    inter_obj = Interview.objects.all()
+def hod_pre_inter_vacancy_overview(request):
+    usr = Users.objects.get(User=request.user)
+    pd = Post_Dept.objects.filter(Dept=usr.Department)
+    vacan = Vacancy.objects.all()
+    context = {
+        'vacan': vacan,
+        'pd': pd,
+    }
+    return render(request, 'hod_pre_inter_vacancy_overview.html', context)
+
+
+def hod_inter_overview(request, vid):
+    usr = Users.objects.get(User=request.user)
+    inter_obj = Interview.objects.filter(Vacancy_id=vid, Department=usr.Department)
     context = {
         'inter_obj': inter_obj,
     }
